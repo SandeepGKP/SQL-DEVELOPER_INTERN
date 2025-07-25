@@ -1,5 +1,5 @@
 -- PERSONAL FINANCE TRACKER DATABASE WITH ADVANCED FEATURES
-
+-- DROP DATABASE project_pft; 
 CREATE DATABASE project_pft;
 USE project_pft;
 
@@ -46,6 +46,17 @@ CREATE TABLE Expenses (
     FOREIGN KEY(user_id) REFERENCES Users(user_id),
     FOREIGN KEY(category_id) REFERENCES Categories(category_id)
 );
+
+-- 4A. Currencies Table for Multi-Currency Support
+CREATE TABLE Currencies (
+    currency_code VARCHAR(10) PRIMARY KEY,
+    currency_name VARCHAR(50),
+    exchange_rate_to_inr DECIMAL(10, 4)
+);
+
+-- Add Foreign Key to Expenses.currency
+ALTER TABLE Expenses
+ADD CONSTRAINT fk_expense_currency FOREIGN KEY (currency) REFERENCES Currencies(currency_code);
 
 -- 5. Budget Limits per User
 CREATE TABLE BudgetLimits (
@@ -142,6 +153,14 @@ INSERT INTO Categories (name, type) VALUES
 INSERT INTO Income (user_id, category_id, amount, source, received_at) VALUES
 (1, 1, 50000, 'Monthly Salary', '2025-07-01'),
 (1, 2, 8000, 'Website Project', '2025-07-10');
+
+-- Currencies
+INSERT INTO Currencies (currency_code, currency_name, exchange_rate_to_inr) VALUES
+('INR', 'Indian Rupee', 1.0000),
+('USD', 'US Dollar', 83.2000),
+('EUR', 'Euro', 91.5000),
+('GBP', 'British Pound', 107.4000),
+('JPY', 'Japanese Yen', 0.5800);
 
 INSERT INTO Expenses (user_id, category_id, amount, description, spent_at, receipt_url, payment_mode, currency, exchange_rate) VALUES
 (1, 3, 12000, 'July Rent', '2025-07-02', 'url1', 'UPI', 'INR', 1.0),
